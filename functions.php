@@ -1,208 +1,120 @@
 <?php
 /**
- * Intentionally Blank Theme functions
+ * Theme functions and definitions
  *
  * @package WordPress
- * @subpackage exchange
+ * @subpackage Exchange
  */
 
-if ( ! function_exists( 'blank_setup' ) ) :
-	/**
-	 * Sets up theme defaults and registers the various WordPress features that
-	 * this theme supports.
-	 */
-	function blank_setup() {
-		load_theme_textdomain( 'exchange' );
-		add_theme_support( 'automatic-feed-links' );
-		add_theme_support( 'title-tag' );
-		add_theme_support( 'post-thumbnails' );
-
-		// This theme allows users to set a custom background.
-		add_theme_support(
-			'custom-background',
-			array(
-				'default-color' => 'f5f5f5',
-			)
-		);
-
-		add_theme_support( 'custom-logo' );
-		add_theme_support(
-			'custom-logo',
-			array(
-				'height'      => 256,
-				'width'       => 256,
-				'flex-height' => true,
-				'flex-width'  => true,
-				'header-text' => array( 'site-title', 'site-description' ),
-			)
-		);
-	}
-endif; // end function_exists blank_setup.
-
-add_action( 'after_setup_theme', 'blank_setup' );
-
-remove_action( 'wp_head', '_custom_logo_header_styles' );
-
-if ( ! is_admin() ) {
-	add_action(
-		'wp_enqueue_scripts',
-		function() {
-			wp_dequeue_style( 'global-styles' );
-			wp_dequeue_style( 'classic-theme-styles' );
-			wp_dequeue_style( 'wp-block-library' );
-		}
-	);
+if ( ! defined( '_S_VERSION' ) ) {
+    // Version
+    define( '_S_VERSION', '1.0.0' );
 }
+
 /**
- * Sets up theme defaults and registers the various WordPress features that
- * this theme supports.
-
- * @param class $wp_customize Customizer object.
+ * 1. Настройка темы (Стандартный WP)
  */
-function blank_customize_register( $wp_customize ) {
-	$wp_customize->remove_section( 'static_front_page' );
-
-	$wp_customize->add_section(
-		'blank_footer',
-		array(
-			'title'      => __( 'Footer', 'exchange' ),
-			'priority'   => 120,
-			'capability' => 'edit_theme_options',
-			'panel'      => '',
-		)
-	);
-	$wp_customize->add_setting(
-		'blank_copyright',
-		array(
-			'type'              => 'theme_mod',
-			'default'           => __( 'Intentionally Blank - Proudly powered by WordPress', 'exchange' ),
-			'sanitize_callback' => 'wp_kses_post',
-		)
-	);
-
-	/**
-	 * Checkbox sanitization function
-
-	 * @param bool $checked Whether the checkbox is checked.
-	 * @return bool Whether the checkbox is checked.
-	 */
-	function blank_sanitize_checkbox( $checked ) {
-		// Returns true if checkbox is checked.
-		return ( ( isset( $checked ) && true === $checked ) ? true : false );
-	}
-	$wp_customize->add_setting(
-		'blank_show_copyright',
-		array(
-			'default'           => true,
-			'sanitize_callback' => 'blank_sanitize_checkbox',
-		)
-	);
-	$wp_customize->add_control(
-		'blank_copyright',
-		array(
-			'type'     => 'textarea',
-			'label'    => __( 'Copyright Text', 'exchange' ),
-			'section'  => 'blank_footer',
-			'settings' => 'blank_copyright',
-			'priority' => '10',
-		)
-	);
-	$wp_customize->add_control(
-		'blank_footer_copyright_hide',
-		array(
-			'type'     => 'checkbox',
-			'label'    => __( 'Show footer with copyright Text', 'exchange' ),
-			'section'  => 'blank_footer',
-			'settings' => 'blank_show_copyright',
-			'priority' => '20',
-		)
-	);
-}
-add_action( 'customize_register', 'blank_customize_register', 100 );
-
-
-
-// Подключение стилей и скриптов
-function exchange_enqueue_assets() {
-
-    // Стили
-    wp_enqueue_style('reset-css', get_template_directory_uri() . '/assets/css/reset.css', array(), '1.0.0');
-
-    wp_enqueue_style('monserat', get_template_directory_uri() . '/assets/font/Montserrat/stylesheet.css', array(), '1.0.0');	
-
-    wp_enqueue_style('main-style', get_template_directory_uri() . '/assets/css/style.css', array('reset-css'), '1.0.0');
-    wp_enqueue_style('main-mobile', get_template_directory_uri() . '/assets/css/mobile.css', array('reset-css'), '1.0.0');
-
-    // Скрипты
-    wp_enqueue_script('app-js', get_template_directory_uri() . '/assets/js/app.js', array('jquery'), '1.0.0', true);
-
-    wp_enqueue_script('modal-js', get_template_directory_uri() . '/assets/js/modal.js', array('jquery', 'app-js'), '1.0.0', true);
-}
-add_action('wp_enqueue_scripts', 'exchange_enqueue_assets');
-
-
-// Регистрация меню
-function exchange_register_menus() {
-    register_nav_menus( array(
+function exchange_setup() {
+    load_theme_textdomain( 'exchange' );
+    add_theme_support( 'automatic-feed-links' );
+    add_theme_support( 'title-tag' );
+    add_theme_support( 'post-thumbnails' );
+    add_theme_support( 'custom-logo', [
+        'height'      => 256,
+        'width'       => 256,
+        'flex-height' => true,
+        'flex-width'  => true,
+    ]);
+    
+    // Регистрация меню
+    register_nav_menus([
         'header_menu' => __( 'Header Menu', 'exchange' ),
         'footer_menu' => __( 'Footer Menu', 'exchange' ),
-    ) );
+    ]);
 }
-add_action( 'after_setup_theme', 'exchange_register_menus' );
+add_action( 'after_setup_theme', 'exchange_setup' );
 
-// Разрешаем загрузку SVG
-function allow_svg_uploads( $mimes ) {
+/**
+ * 2. Подключение стилей и скриптов
+ */
+function exchange_scripts() {
+    // Стили
+    wp_enqueue_style('reset-css', get_template_directory_uri() . '/assets/css/reset.css', [], '1.0.0');
+    wp_enqueue_style('monserat', get_template_directory_uri() . '/assets/font/Montserrat/stylesheet.css', [], '1.0.0');    
+    wp_enqueue_style('main-style', get_template_directory_uri() . '/assets/css/style.css', ['reset-css'], '1.0.0');
+    wp_enqueue_style('main-mobile', get_template_directory_uri() . '/assets/css/mobile.css', ['reset-css'], '1.0.0');
+
+    // Скрипты
+    wp_enqueue_script('app-js', get_template_directory_uri() . '/assets/js/app.js', ['jquery'], '1.0.0', true);
+    wp_enqueue_script('modal-js', get_template_directory_uri() . '/assets/js/modal.js', ['jquery', 'app-js'], '1.0.0', true);
+}
+add_action( 'wp_enqueue_scripts', 'exchange_scripts' );
+
+/**
+ * 3. SVG Support
+ */
+add_filter( 'upload_mimes', function( $mimes ) {
     $mimes['svg'] = 'image/svg+xml';
     return $mimes;
-}
-add_filter( 'upload_mimes', 'allow_svg_uploads' );
+});
 
-// Исправляем отображение SVG в медиа-библиотеке
-function fix_svg_display() {
-    echo '<style>
-        .attachment-266x266, .thumbnail img {
-            width: 100% !important;
-            height: auto !important;
-        }
-    </style>';
-}
-add_action( 'admin_head', 'fix_svg_display' );
-
-
-
+add_action( 'admin_head', function() {
+    echo '<style>.attachment-266x266, .thumbnail img { width: 100% !important; height: auto !important; }</style>';
+});
 
 // =========================================================================
-// WpOBC CORE: ПОДКЛЮЧЕНИЕ ЯДРА
+// WpOBC CORE: ПОДКЛЮЧЕНИЕ ЯДРА (НОВАЯ АРХИТЕКТУРА)
 // =========================================================================
 
-// 1. Подключаем файлы Setup
-require_once get_template_directory() . '/inc/core/Setup/PostTypes.php';
-require_once get_template_directory() . '/inc/core/Setup/Database.php';
+// Проверка существования файлов перед подключением, чтобы избежать Fatal Error
+$core_path = get_template_directory() . '/inc/core';
 
-// 2. Подключаем Интерфейсы и Сервисы (То, что мы писали в прошлом шаге)
-require_once get_template_directory() . '/inc/core/Interfaces/ExchangeProviderInterface.php';
-require_once get_template_directory() . '/inc/core/Providers/ChangeNowProvider.php';
-require_once get_template_directory() . '/inc/core/Providers/SimpleSwapProvider.php'; // Раскомментируй, когда создашь файл
-require_once get_template_directory() . '/inc/core/Services/RateService.php';
+// 1. Setup классы (Регистрация типов постов и БД)
+if (file_exists($core_path . '/Setup/PostTypes.php')) {
+    require_once $core_path . '/Setup/PostTypes.php';
+}
+if (file_exists($core_path . '/Setup/Database.php')) {
+    require_once $core_path . '/Setup/Database.php';
+}
 
-// 3. Инициализация
-\WpOBC\Setup\PostTypes::init();
-\WpOBC\Setup\Database::init();
+// 2. Интерфейсы и Сервисы
+if (file_exists($core_path . '/Interfaces/ExchangeProviderInterface.php')) {
+    require_once $core_path . '/Interfaces/ExchangeProviderInterface.php';
+}
+if (file_exists($core_path . '/Providers/ChangeNowProvider.php')) {
+    require_once $core_path . '/Providers/ChangeNowProvider.php';
+}
+if (file_exists($core_path . '/Services/RateService.php')) {
+    require_once $core_path . '/Services/RateService.php';
+}
 
-// 4. Настройка Cron (из предыдущего ответа)
+// 3. Инициализация (Запуск)
+// Проверяем существование классов перед вызовом
+if (class_exists('\WpOBC\Setup\PostTypes')) {
+    \WpOBC\Setup\PostTypes::init();
+}
+if (class_exists('\WpOBC\Setup\Database')) {
+    \WpOBC\Setup\Database::init();
+}
+
+// 4. Настройка Cron (Фоновое обновление курсов)
 add_action('init', function() {
     if (!wp_next_scheduled('wp_obc_cron_update_rates')) {
         wp_schedule_event(time(), 'every_minute', 'wp_obc_cron_update_rates');
     }
 });
 
+// Обработчик задачи Cron
 add_action('wp_obc_cron_update_rates', function() {
-    $service = new \WpOBC\Services\RateService();
-    $service->addProvider(new \WpOBC\Providers\ChangeNowProvider());
-    // $service->addProvider(new \WpOBC\Providers\SimpleSwapProvider());
-    $service->updateStaleRates(5);
+    if (class_exists('\WpOBC\Services\RateService') && class_exists('\WpOBC\Providers\ChangeNowProvider')) {
+        $service = new \WpOBC\Services\RateService();
+        $service->addProvider(new \WpOBC\Providers\ChangeNowProvider());
+        // Обновляем 5 устаревших монет
+        $service->updateStaleRates(5);
+    }
 });
 
+// Добавляем интервал "каждую минуту"
 add_filter('cron_schedules', function ($schedules) {
     if (!isset($schedules['every_minute'])) {
         $schedules['every_minute'] = ['interval' => 60, 'display'  => __('Каждую минуту')];
