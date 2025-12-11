@@ -1,86 +1,8 @@
 <?php
 
-// =========================================================================
-// PHP WORKER: ПОСЛЕДОВАТЕЛЬНОЕ ОБНОВЛЕНИЕ (STRICT SEQUENTIAL)
-// =========================================================================
 
-// =========================================================================
-// 🚑 ИНСТРУМЕНТ ДИАГНОСТИКИ (ВРЕМЕННЫЙ)
-// =========================================================================
-// add_shortcode('debug_system', 'debug_system_function');
-// function debug_system_function() {
-//     global $wpdb;
-//     $table_name = $wpdb->prefix . 'exchange_rates_cache';
-    
-//     echo "<div style='background:#fff; padding:20px; border:2px solid red;'>";
-//     echo "<h2>🚑 Диагностика Системы</h2>";
-
-//     // 1. ПРОВЕРКА ТАБЛИЦЫ БД
-//     $check_table = $wpdb->get_var("SHOW TABLES LIKE '$table_name'");
-//     if ($check_table != $table_name) {
-//         echo "<p style='color:red; font-weight:bold;'>❌ ОШИБКА: Таблица $table_name НЕ СУЩЕСТВУЕТ.</p>";
-//         echo "<p>Попытка создать таблицу прямо сейчас...</p>";
-        
-//         // Принудительное создание
-//         $charset_collate = $wpdb->get_charset_collate();
-//         $sql = "CREATE TABLE $table_name (
-//             id mediumint(9) NOT NULL AUTO_INCREMENT,
-//             coin_id mediumint(9) NOT NULL,
-//             exchange_name varchar(50) NOT NULL,
-//             price decimal(20, 10) DEFAULT 0,
-//             status varchar(10) DEFAULT 'OK',
-//             updated_at datetime DEFAULT CURRENT_TIMESTAMP,
-//             PRIMARY KEY  (id),
-//             UNIQUE KEY coin_exchange (coin_id, exchange_name)
-//         ) $charset_collate;";
-//         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-//         dbDelta($sql);
-//         echo "<p style='color:green;'>✅ Команда создания отправлена. Обновите страницу.</p>";
-//     } else {
-//         echo "<p style='color:green;'>✅ Таблица БД существует.</p>";
-//         $count = $wpdb->get_var("SELECT COUNT(*) FROM $table_name");
-//         echo "<p>Записей в таблице: <strong>$count</strong></p>";
-        
-//         if($count > 0) {
-//             $rows = $wpdb->get_results("SELECT * FROM $table_name LIMIT 5");
-//             echo "<pre>" . print_r($rows, true) . "</pre>";
-//         }
-//     }
-
-//     echo "<hr>";
-
-//     // 2. ПРОВЕРКА БИРЖ (Связь ACF)
-//     echo "<h3>Проверка настроек бирж:</h3>";
-//     $exchanges = ['changenow', 'simpleswap', 'stealthex'];
-    
-//     foreach($exchanges as $slug) {
-//         $p = get_page_by_title($slug, OBJECT, 'exchange');
-//         if (!$p) {
-//             echo "<p style='color:red;'>❌ Пост с названием '$slug' не найден в типе 'Биржи'. (Проверьте Slug!)</p>";
-//         } else {
-//             $key = get_field('api_key', $p->ID);
-//             $active = get_field('exchange_status', $p->ID);
-//             echo "<p><strong>$slug</strong>: ID={$p->ID}, Статус=" . ($active?'ВКЛ':'ВЫКЛ') . ", Ключ=" . ($key?'ЕСТЬ':'НЕТ') . "</p>";
-            
-//             // Тестовый запрос (CURL)
-//             if($active && $key) {
-//                 echo "<span>Тест соединения... ";
-//                 if($slug == 'changenow') {
-//                     $url = rtrim(get_field('api_url', $p->ID), '/');
-//                     $res = wp_remote_get("$url/currencies?active=true");
-//                     if(is_wp_error($res)) echo "<b style='color:red'>ОШИБКА: " . $res->get_error_message() . "</b>";
-//                     else echo "<b style='color:green'>OK (Code " . wp_remote_retrieve_response_code($res) . ")</b>";
-//                 }
-//                 echo "</span>";
-//             }
-//         }
-//     }
-
-//     echo "</div>";
-// }
-
-add_action('wp_ajax_process_coin_sequential_worker', 'process_coin_sequential_worker');
-add_action('wp_ajax_nopriv_process_coin_sequential_worker', 'process_coin_sequential_worker');
+// add_action('wp_ajax_process_coin_sequential_worker', 'process_coin_sequential_worker');
+// add_action('wp_ajax_nopriv_process_coin_sequential_worker', 'process_coin_sequential_worker');
 
 function process_coin_sequential_worker() {
     // Массив для сбора логов, чтобы видеть, что происходит внутри
