@@ -1,0 +1,278 @@
+:root {
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  font-family: 'Montserrat';
+}
+
+body.no-scroll {
+  overflow: hidden;
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.container {
+  width: 100%;
+  max-width: 1600px;
+  height: auto;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+h1 {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+h4 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: #e4f8ff;
+}
+
+main {
+  flex: 1;
+}
+
+/* header */
+
+.header {
+  /* background-color: #091524; */
+  background: linear-gradient(135deg, #87ceeb 0%, #0aa0d2 100%);
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  padding: 10px 0;
+}
+
+/* ./header */
+
+/* footer */
+
+.footer {
+  background-color: #091524;
+  color: #fff;
+  padding: 60px 0 30px;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+
+.footer-logo {
+  height: 60px;
+  object-fit: contain;
+}
+
+/* ./footer */
+
+.logo img {
+  max-width: 200px;
+}
+
+.header-menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-menu li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.accordion {
+  max-width: 700px;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  font-family: system-ui, sans-serif;
+}
+
+.accordion-item {
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.accordion-title {
+  display: block;
+  position: relative;
+  padding: 15px 20px;
+  background: #f8f8f8;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+.accordion-title:hover {
+  background: #efefef;
+}
+
+.accordion-title::after {
+  content: '+';
+  position: absolute;
+  right: 20px;
+  font-size: 18px;
+  transition: transform 0.3s;
+}
+
+.accordion-item.active .accordion-title::after {
+  content: '–';
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  background: #fff;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+  padding: 0 20px;
+}
+
+.accordion-item.active .accordion-content {
+  max-height: 500px;
+  padding: 15px 20px;
+}
+
+.copyright {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.footer_text2 {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* ---------------------------------- */
+
+.crypto-exchange-wrapper {
+  display: flex;
+  gap: 40px;
+}
+
+.coins-right #coins-to-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.coin-item-right {
+  padding: 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  /* opacity:0; */
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+.coin-item-right.active {
+  background: #0073aa;
+  color: #fff;
+}
+.coin-item-right.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.coin-item-left,
+.coin-item-right {
+  padding: 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: background-color 0.2s, color 0.2s;
+}
+/* Стили для правой колонки */
+.coin-item-right {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.coin-name {
+  font-weight: bold;
+}
+.coin-details {
+  font-size: 0.9em;
+  color: #555;
+  display: flex;
+  gap: 10px;
+}
+
+.coin-item-left:hover,
+.coin-item-right:hover {
+  background-color: #f0f0f0;
+}
+
+.coin-item-left.active,
+.coin-item-right.active {
+  background: #0073aa !important;
+  color: #fff !important;
+  border-color: #0073aa !important;
+}
+/* Когда блок активен, делаем детали тоже белыми */
+.coin-item-right.active .coin-details {
+  color: #fff !important;
+}
+
+.coins-left {
+  width: 50%;
+}
+
+.coins-right {
+  width: 50%;
+}
+
+/* ----------------------------------- */
+
+/* exchange */
+
+.exchange {
+  border-radius: 20px;
+  background-color: #fff;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+/* ./exchange */
