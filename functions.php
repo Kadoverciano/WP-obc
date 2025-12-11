@@ -169,6 +169,52 @@ function fix_svg_display() {
 add_action( 'admin_head', 'fix_svg_display' );
 
 
-get_template_part('inc/custom/custom-type-single');
 
 
+// =========================================================================
+// WpOBC CORE: ПОДКЛЮЧЕНИЕ ЯДРА
+// =========================================================================
+
+// 1. Подключаем файлы Setup
+require_once get_template_directory() . '/inc/core/Setup/PostTypes.php';
+require_once get_template_directory() . '/inc/core/Setup/Database.php';
+
+// 2. Подключаем Интерфейсы и Сервисы (То, что мы писали в прошлом шаге)
+require_once get_template_directory() . '/inc/core/Interfaces/ExchangeProviderInterface.php';
+require_once get_template_directory() . '/inc/core/Providers/ChangeNowProvider.php';
+require_once get_template_directory() . '/inc/core/Providers/SimpleSwapProvider.php'; // Раскомментируй, когда создашь файл
+require_once get_template_directory() . '/inc/core/Services/RateService.php';
+
+// 3. Инициализация
+\WpOBC\Setup\PostTypes::init();
+\WpOBC\Setup\Database::init();
+
+// 4. Настройка Cron (из предыдущего ответа)
+add_action('init', function() {
+    if (!wp_next_scheduled('wp_obc_cron_update_rates')) {
+        wp_schedule_event(time(), 'every_minute', 'wp_obc_cron_update_rates');
+    }
+});
+
+add_action('wp_obc_cron_update_rates', function() {
+    $service = new \WpOBC\Services\RateService();
+    $service->addProvider(new \WpOBC\Providers\ChangeNowProvider());
+    // $service->addProvider(new \WpOBC\Providers\SimpleSwapProvider());
+    $service->updateStaleRates(5);
+});
+
+add_filter('cron_schedules', function ($schedules) {
+    if (!isset($schedules['every_minute'])) {
+        $schedules['every_minute'] = ['interval' => 60, 'display'  => __('Каждую минуту')];
+    }
+    return $schedules;
+});
+
+// 5. Блокировка полей ACF (Read-only для курсов)
+add_filter('acf/load_field/name=curs_moneti', function( $field ) {
+    if (is_admin()) {
+        $field['readonly'] = 1;
+        $field['instructions'] = 'Обновляется автоматически через Cron (RateService).';
+    }
+    return $field;
+});
