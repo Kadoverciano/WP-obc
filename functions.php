@@ -88,6 +88,14 @@ if (file_exists($core_path . '/Services/RateService.php')) {
     require_once $core_path . '/Services/RateService.php';
 }
 
+if (file_exists($core_path . '/Services/CalculationService.php')) {
+    require_once $core_path . '/Services/CalculationService.php';
+}
+
+if (file_exists($core_path . '/Api/ExchangeController.php')) {
+    require_once $core_path . '/Api/ExchangeController.php';
+}
+
 // 3. Инициализация (Запуск)
 // Проверяем существование классов перед вызовом
 if (class_exists('\WpOBC\Setup\PostTypes')) {
@@ -95,6 +103,10 @@ if (class_exists('\WpOBC\Setup\PostTypes')) {
 }
 if (class_exists('\WpOBC\Setup\Database')) {
     \WpOBC\Setup\Database::init();
+}
+
+if (class_exists('\WpOBC\Api\ExchangeController')) {
+    \WpOBC\Api\ExchangeController::init();
 }
 
 // 4. Настройка Cron (Фоновое обновление курсов)
