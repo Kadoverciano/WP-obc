@@ -1,0 +1,9 @@
+# Игнорируем папки с медиа
+/assets/font/
+/assets/img/
+
+# Игнорируем ненужные PHP файлы
+/inc/custom/custom-type-single-copy.php
+/inc/custom/custom-type-single-copy-2.php
+/inc/custom/custom-type-single-copy-3.php
+/inc/custom/custom-type-single-copy-4.php
